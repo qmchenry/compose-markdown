@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
                 item {
                     MarkdownText(
                         markdown = demo,
+                        linkColor = Color.Red,
                         viewId =
                         R.id.markdownTextId,
                         disableLinkMovementMethod = false

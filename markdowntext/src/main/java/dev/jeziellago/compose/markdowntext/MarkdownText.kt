@@ -27,6 +27,7 @@ import coil.ImageLoader
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonConfiguration
+import io.noties.markwon.core.MarkwonTheme
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tables.TablePlugin
 import io.noties.markwon.html.HtmlPlugin
@@ -38,6 +39,7 @@ fun MarkdownText(
     markdown: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    linkColor: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     textAlign: TextAlign? = null,
     maxLines: Int = Int.MAX_VALUE,
@@ -54,7 +56,7 @@ fun MarkdownText(
 ) {
     val defaultColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
     val context: Context = LocalContext.current
-    val markdownRender: Markwon = remember { createMarkdownRender(context, imageLoader, onLinkClicked) }
+    val markdownRender: Markwon = remember { createMarkdownRender(context, imageLoader, linkColor, onLinkClicked) }
     AndroidView(
         modifier = modifier,
         factory = { ctx ->
@@ -136,6 +138,7 @@ private fun createTextView(
 private fun createMarkdownRender(
     context: Context,
     imageLoader: ImageLoader?,
+    linkColor: Color = Color.Unspecified,
     onLinkClicked: ((String) -> Unit)? = null
 ): Markwon {
     val coilImageLoader = imageLoader ?: ImageLoader.Builder(context)
@@ -155,6 +158,11 @@ private fun createMarkdownRender(
                     // handle individual clicks on Textview link
                     onLinkClicked?.invoke(link)
                 }
+            }
+        })
+        .usePlugin(object: AbstractMarkwonPlugin() {
+            override fun configureTheme(builder: MarkwonTheme.Builder) {
+                builder.linkColor(linkColor.toArgb())
             }
         })
         .build()
